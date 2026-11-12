@@ -69,12 +69,16 @@ src/*.js
 
 ```bash
 npm run build
-scp -r dist/* <user>@103.117.138.156:/tmp/epaper-web/
+tar -C dist -czf /tmp/epaper-web.tar.gz .
+scp /tmp/epaper-web.tar.gz <user>@103.117.138.156:/tmp/
 ssh <user>@103.117.138.156
 sudo cp -a /srv/epaper-frame/site /srv/epaper-frame/site.bak-$(date +%F-%H%M%S)
-sudo rsync -a --delete /tmp/epaper-web/ /srv/epaper-frame/site/
+sudo rm -rf /srv/epaper-frame/site
+sudo mkdir -p /srv/epaper-frame/site
+sudo tar --no-same-owner -C /srv/epaper-frame/site -xzf /tmp/epaper-web.tar.gz
 sudo chown -R www-data:www-data /srv/epaper-frame/site
 sudo chmod -R a+rX /srv/epaper-frame/site
+rm -f /tmp/epaper-web.tar.gz
 ```
 
 更完整的部署、缓存、证书和验证步骤见 [网页说明](docs/ble-web.md) 与 [验证记录](docs/ble-web-validation.md)。
